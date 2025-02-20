@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace WPFZooManager
 {
@@ -28,6 +29,23 @@ namespace WPFZooManager
             InitializeComponent();
             string connectionString = ConfigurationManager.ConnectionStrings["WPFZooManager.Properties.Settings.ManagementZoodbConnectionString"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
+            ShowZoos();
+        }
+
+        private void ShowZoos()
+        {
+            string qurey = "select * from Zoo";
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(qurey, sqlConnection);
+
+            using (sqlDataAdapter)
+            {
+                DataTable zooTable = new DataTable();
+                sqlDataAdapter.Fill(zooTable);
+
+                listZoos.DisplayMemberPath = "Location";
+                listZoos.SelectedValuePath = "Id";
+                listZoos.ItemsSource = zooTable.DefaultView;
+            }
         }
     }
 }
