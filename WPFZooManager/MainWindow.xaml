@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFZooManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="725
+        ">
     <Grid>
-        
+        <Label Content="Zoo List" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="listZoos" HorizontalAlignment="Left" Height="181" Margin="10,36,0,0" VerticalAlignment="Top" Width="105"/>
+
     </Grid>
 </Window>

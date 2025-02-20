@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;
+using System.Data.SqlClient;
 
 namespace WPFZooManager
 {
@@ -21,10 +22,12 @@ namespace WPFZooManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        SqlConnection sqlConnection;
         public MainWindow()
         {
             InitializeComponent();
             string connectionString = ConfigurationManager.ConnectionStrings["WPFZooManager.Properties.Settings.ManagementZoodbConnectionString"].ConnectionString;
+            sqlConnection = new SqlConnection(connectionString);
         }
     }
 }
