@@ -27,7 +27,7 @@ namespace WPFZooManager
         public MainWindow()
         {
             InitializeComponent();
-            string connectionString = ConfigurationManager.ConnectionStrings["WPFZooManager.Properties.Settings.ManagementZoodbConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["WPFZooManager.Properties.Settings.ManagementZoodbConnectionString1"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
             ShowZoos();
         }
