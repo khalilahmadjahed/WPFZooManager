@@ -79,7 +79,7 @@ namespace WPFZooManager
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                //MessageBox.Show(e.Message);
             }
            
         }
@@ -114,5 +114,60 @@ namespace WPFZooManager
             
         }
 
+        private void DeleteZoo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string query = "delete from Zoo where id = @ZooId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlConnection.Open();
+                sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+                sqlCommand.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowZoos();
+            }
+           
+        }
+        private void RemoveAnimal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddZoo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Add_Animal_Zoo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UpdateZoo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UpdateAnimal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteAnimal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Add_Animal_To_Zoo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
