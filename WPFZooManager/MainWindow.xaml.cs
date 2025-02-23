@@ -34,18 +34,58 @@ namespace WPFZooManager
 
         private void ShowZoos()
         {
-            string qurey = "select * from Zoo";
-            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(qurey, sqlConnection);
-
-            using (sqlDataAdapter)
+            try
             {
-                DataTable zooTable = new DataTable();
-                sqlDataAdapter.Fill(zooTable);
+                string qurey = "select * from Zoo";
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(qurey, sqlConnection);
 
-                listZoos.DisplayMemberPath = "Location";
-                listZoos.SelectedValuePath = "Id";
-                listZoos.ItemsSource = zooTable.DefaultView;
+                using (sqlDataAdapter)
+                {
+                    DataTable zooTable = new DataTable();
+                    sqlDataAdapter.Fill(zooTable);
+
+                    listZoos.DisplayMemberPath = "Location";
+                    listZoos.SelectedValuePath = "Id";
+                    listZoos.ItemsSource = zooTable.DefaultView;
+                }
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
+        }
+
+        private void ShowAssociatedAnimals()
+        {
+            try
+            {
+                string qurey = "select * from Animal a inner join ZooAnimal za on a.Id = za.AnimalId where za.ZooId = @ZooId";
+                SqlCommand sqlCommand = new SqlCommand(qurey, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                using (sqlDataAdapter)
+                {
+                    sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+                    DataTable animalTabel = new DataTable();
+
+                    sqlDataAdapter.Fill(animalTabel);
+
+                    listAssociatedAnimals.DisplayMemberPath = "Name";
+                    listAssociatedAnimals.SelectedValuePath = "Id";
+                    listAssociatedAnimals.ItemsSource = animalTabel.DefaultView;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+           
+        }
+
+        private void listZoos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowAssociatedAnimals();
         }
     }
 }
