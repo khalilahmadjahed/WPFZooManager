@@ -30,6 +30,7 @@ namespace WPFZooManager
             string connectionString = ConfigurationManager.ConnectionStrings["WPFZooManager.Properties.Settings.ManagementZoodbConnectionString1"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
             ShowZoos();
+            ShowAnimals();
         }
 
         private void ShowZoos()
@@ -87,5 +88,31 @@ namespace WPFZooManager
         {
             ShowAssociatedAnimals();
         }
+
+
+        private void ShowAnimals()
+        {
+            try
+            {
+                string query = "select * from Animal";
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+
+                using (sqlDataAdapter)
+                {
+                    DataTable animalTable = new DataTable();
+                    sqlDataAdapter.Fill(animalTable);
+
+                    listAllAnimals.DisplayMemberPath = "Name";
+                    listAllAnimals.SelectedValue = "Id";
+                    listAllAnimals.ItemsSource = animalTable.DefaultView;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
+        }
+
     }
 }
