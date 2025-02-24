@@ -338,7 +338,24 @@ namespace WPFZooManager
         }
         private void UpdateZoo_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                string query = "update Zoo Set Location = @Location where Id = @ZooId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlConnection.Open();
+                sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+                sqlCommand.Parameters.AddWithValue("@Location", txtBox_Add.Text);
+                sqlCommand.ExecuteNonQuery(); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowZoos();
+            }
         }
 
         private void UpdateAnimal_Click(object sender, RoutedEventArgs e)
