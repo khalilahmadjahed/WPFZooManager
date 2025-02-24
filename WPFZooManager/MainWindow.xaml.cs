@@ -135,15 +135,31 @@ namespace WPFZooManager
             }
            
         }
+        private void AddZoo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string query = "insert into Zoo values (@Location)";
+                SqlCommand sqlCommad = new SqlCommand(query, sqlConnection);
+                sqlConnection.Open();
+                sqlCommad.Parameters.AddWithValue("@Location", txtBox_Add.Text);
+                sqlCommad.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowZoos();
+            }
+        }
         private void RemoveAnimal_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void AddZoo_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Add_Animal_Zoo_Click(object sender, RoutedEventArgs e)
         {
