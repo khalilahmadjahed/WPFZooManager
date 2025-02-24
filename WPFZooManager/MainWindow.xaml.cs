@@ -206,6 +206,39 @@ namespace WPFZooManager
 
         private void DeleteAnimal_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (listAllAnimals.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select an animal!");
+                    return;
+                }
+
+                DataRowView selectedRow = listAllAnimals.SelectedItem as DataRowView;
+                int animalId = Convert.ToInt32(selectedRow["id"]);
+
+                string query = "DELETE FROM Animal WHERE id = @AnimalId";
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlConnection.Open();
+                    sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+                    int rowsAffected = sqlCommand.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                        MessageBox.Show("Animal is deleted successfully!");
+                    else
+                        MessageBox.Show("Error!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowAnimals(); 
+            }
 
         }
 
