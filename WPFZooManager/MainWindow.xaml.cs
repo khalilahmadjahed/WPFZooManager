@@ -91,6 +91,11 @@ namespace WPFZooManager
             ShowSelectedZooIdInTextBox();
         }
 
+        private void listAllAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowSelectedAnimalIdInTextBox();
+        }
+
 
         private void ShowAnimals()
         {
@@ -249,6 +254,7 @@ namespace WPFZooManager
             try
             {
                 string query = "select location from Zoo where Id = @ZooId";
+
                 SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
@@ -265,6 +271,49 @@ namespace WPFZooManager
                 MessageBox.Show(ex.Message); 
             }
         }
+
+        private void ShowSelectedAnimalIdInTextBox()
+        {
+            try
+            {
+                // Ensure an item is selected
+                if (listAllAnimals.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select an animal.");
+                    return;
+                }
+
+                // Extract the correct ID value from the DataRowView
+                DataRowView selectedAnimal = listAllAnimals.SelectedItem as DataRowView;
+                int animalId = Convert.ToInt32(selectedAnimal["Id"]); // Ensure "Id" matches your DB column name
+
+                string query = "SELECT Name FROM Animal WHERE Id = @AnimalId";
+
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                {
+                    sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+
+                    DataTable animalDataTable = new DataTable();
+                    sqlDataAdapter.Fill(animalDataTable);
+
+                    if (animalDataTable.Rows.Count > 0)
+                    {
+                        txtBox_Add.Text = animalDataTable.Rows[0]["Name"].ToString();
+                    }
+                    else
+                    {
+                        txtBox_Add.Text = "Not found"; // Handle cases where no matching record is found
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+
+        }
+
         private void Add_Animal_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -287,7 +336,6 @@ namespace WPFZooManager
             }
             
         }
-
         private void UpdateZoo_Click(object sender, RoutedEventArgs e)
         {
 
@@ -297,6 +345,5 @@ namespace WPFZooManager
         {
 
         }
-
     }
 }
