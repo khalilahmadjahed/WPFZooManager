@@ -155,7 +155,56 @@ namespace WPFZooManager
                 ShowZoos();
             }
         }
+        private void Add_Animal_To_Zoo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Validate selection
+                if (listZoos.SelectedItem == null || listAllAnimals.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select a zoo and an animal.");
+                    return;
+                }
+
+                // Extract values from DataRowView
+                DataRowView selectedZoo = listZoos.SelectedItem as DataRowView;
+                DataRowView selectedAnimal = listAllAnimals.SelectedItem as DataRowView;
+
+                // Assuming the ID column in both lists is named "id"
+                int zooId = Convert.ToInt32(selectedZoo["id"]);
+                int animalId = Convert.ToInt32(selectedAnimal["id"]);
+
+                string query = "INSERT INTO ZooAnimal (ZooId, AnimalId) VALUES (@ZooId, @AnimalId)";
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlConnection.Open();
+                    sqlCommand.Parameters.AddWithValue("@ZooId", zooId);
+                    sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+
+                    // ExecuteNonQuery is more appropriate for INSERT statements
+                    int rowsAffected = sqlCommand.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        MessageBox.Show("Animal successfully added to the zoo.");
+                    else
+                        MessageBox.Show("Error adding the animal.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowAssociatedAnimals(); // Refresh the list after insertion
+            }
+
+        }
         private void RemoveAnimal_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void DeleteAnimal_Click(object sender, RoutedEventArgs e)
         {
 
         }
@@ -175,15 +224,6 @@ namespace WPFZooManager
         {
 
         }
-
-        private void DeleteAnimal_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Add_Animal_To_Zoo_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+       
     }
 }
