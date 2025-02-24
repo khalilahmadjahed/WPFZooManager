@@ -31,6 +31,7 @@ namespace WPFZooManager
             sqlConnection = new SqlConnection(connectionString);
             ShowZoos();
             ShowAnimals();
+           
         }
 
         private void ShowZoos()
@@ -87,6 +88,7 @@ namespace WPFZooManager
         private void listZoos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ShowAssociatedAnimals();
+            ShowSelectedZooIdInTextBox();
         }
 
 
@@ -240,6 +242,28 @@ namespace WPFZooManager
                 ShowAnimals(); 
             }
 
+        }
+
+        private void ShowSelectedZooIdInTextBox()
+        {
+            try
+            {
+                string query = "select location from Zoo where Id = @ZooId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                using (sqlDataAdapter)
+                {
+                    sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+                    DataTable zooDataTable = new DataTable();
+                    sqlDataAdapter.Fill(zooDataTable);
+                    txtBox_Add.Text = zooDataTable.Rows[0]["Location"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message); 
+            }
         }
         private void Add_Animal_Click(object sender, RoutedEventArgs e)
         {
