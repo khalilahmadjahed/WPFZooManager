@@ -360,7 +360,43 @@ namespace WPFZooManager
 
         private void UpdateAnimal_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (listAllAnimals.SelectedItem == null)
+                {
+                    MessageBox.Show("Please select an animal.");
+                    return;
+                }
 
+                DataRowView selectedRow = listAllAnimals.SelectedItem as DataRowView;
+                if (selectedRow == null || selectedRow["Id"] == DBNull.Value)
+                {
+                    MessageBox.Show("Invalid animal ID.");
+                    return;
+                }
+
+                int animalId = Convert.ToInt32(selectedRow["Id"]);
+
+                string query = "UPDATE Animal SET Name = @Name WHERE Id = @AnimalId";
+
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+                    sqlCommand.Parameters.AddWithValue("@Name", txtBox_Add.Text);
+
+                    sqlConnection.Open();
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowAnimals();
+            }
         }
     }
 }
